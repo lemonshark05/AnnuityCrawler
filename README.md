@@ -1,4 +1,4 @@
-Annuity Crawling Project
+# Annuity Crawling Project
 
 ## Overview
 
@@ -81,6 +81,16 @@ Example output:
 ```
 ChromeDriver 130.0.6723.58 (3a50e012e4c9b8a410a4e2b12bf577e69ee8f755-refs/branch-heads/6723@{#1353})
 ```
+#### Make sure that the ChromeDriver version matches your installed Chrome version. 
+Check Chrome Version: Open Google Chrome and click on the three-dot menu in the top-right corner. Then, navigate to Help > About Google Chrome. Here you will see the version number of your
+ installed Chrome browser.
+
+<img width="325" alt="Screenshot 2024-10-16 at 21 43 52" src="https://github.com/user-attachments/assets/61d3421e-b48c-4690-a248-4073315e7689">
+
+Match ChromeDriver Version: Once you have the Chrome version, visit the official ChromeDriver site and download the version that corresponds to your Chrome version. For example, if your Chrome version is 130.x.x.x, download the ChromeDriver version that matches 130.x.x.
+
+<img width="729" alt="Screenshot 2024-10-16 at 21 43 20" src="https://github.com/user-attachments/assets/65153c2a-9ee0-4d9c-949a-73f9d5d52743">
+
 
 ## Folder Structure
 
