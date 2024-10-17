@@ -1,0 +1,111 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Virtual Environment (Python specific)
+venv/
+env/
+ENV/
+.venv/
+.env/
+
+# Environment variables and secrets (Sensitive information)
+.env
+*.env
+config.yaml
+*.key
+*.pem
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# IDE and Editor settings
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+
+# macOS specific files
+.DS_Store
+
+# Log files
+*.log
+
+# Scraped data files
+*.csv
+*.json
+*.xlsx
+*.xml
+
+# Cache directories and files
+*.cache
+*.egg-info/
+.eggs/
+
+# Generated documentation
+/build/
+docs/_build/
+
+# Unit test / coverage reports
+.coverage
+.tox/
+.nox/
+.pytest_cache/
+coverage.xml
+nosetests.xml
+test-results/
+
+# Profiling data
+*.prof
+*.dat
+
+# Dependencies and packages
+pip-wheel-metadata/
+pip-log.txt
+pip-delete-this-directory.txt
+*.lock
+Pipfile.lock
+poetry.lock
+
+# Distribution / Packaging
+.Python
+build/
+dist/
+*.egg
+*.egg-info/
+.installed.cfg
+
+# Installer logs
+*.log
+
+# Binary files (executables, compiled objects, etc.)
+*.exe
+*.dll
+*.so
+*.dylib
+*.out
+*.o
+*.a
+
+# Archives
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# Temporary files and directories
+*.tmp
+*.temp
+*.swp
+*~
+
+# Selenium or other web scraper specific files
+chromedriver
+geckodriver
+phantomjs
+browsermob-proxy
+webdriver-manager.log
