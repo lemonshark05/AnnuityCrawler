@@ -1,0 +1,1 @@
+Company|Annuity Type|Product Name|Term|Index|Fee|Buffer|Cap Rate|Participation Rate
