@@ -106,12 +106,15 @@ Each website is stored in a separate folder. Each folder contains the following:
 
 ```
 project-root/
-    ├── Transamerica/
-    │   └── transamerica_scraper.py
+    ├── scrapers/
+    │   ├── allianz_scraper.py
+    │   ├── transamerica_scraper.py
     ├── table/
-    │   └── header.txt
-    ├── Allianz/
-    │   └── allianz_scraper.py
+    │   ├── header.txt
+    ├── utils/
+    │   ├── error_handler.py
+    │   └── selenium_setup.py
+    ├── main.py
     └── requirements.txt
 ```
 
@@ -119,16 +122,10 @@ project-root/
 
 Each folder represents a different website. You can navigate to the respective folder and run the scraper script. Below is an example of how to run a scraper for a specific website.
 
-1. Navigate to the appropriate folder:
+Run the script using Python:
 
    ```sh
-   cd Transamerica
-   ```
-
-2. Run the script using Python:
-
-   ```sh
-   python3 transamerica_scraper.py
+   python3 main.py
    ```
 
 ### Example Script Explained
