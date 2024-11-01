@@ -1,0 +1,10 @@
+base_url,link_by,link_text,pdf_path
+https://www.transamerica.com/annuities/transamerica-structured-index-advantage-annuity,title,Current Rates,./Transamerica_Advantage_Rate.pdf
+https://www.allianzlife.com/what-we-offer/annuities/registered-index-linked-annuities/index-advantage-plus-nf/rates,text,Download Guide to current new business rates (PDF),./Allianzlife_Advantage_Rate.pdf
+https://prudential.scene7.com/is/content/prudential/FlexGuardIncomeRateSheet,pdf,,./Flex_Guard.pdf
+https://mybusiness.massmutualascend.com/indexsummitmaterials,text,Index Summit 6 Client Rate Flier,./MassMutual_Ascend_Rate.pdf
+https://mybusiness.massmutualascend.com/indexsummitmaterials,text,Index Summit 6 Pro Client Rate Flier,./MassMutual_Ascend_Pro_Rate.pdf
+https://www.lincolnfinancial.com/public/microsite/leveladvantage/ratesheets,text,Lincoln Level Advantage 2##B-Share rates,./Lincoln_Level_Advantage_Rate.pdf
+https://www.nationwide.com/personal/investing/annuities/registered-index-linked/types/defender,text,Current rate sheet,./Nationwide_Defende_Rate.pdf
+https://equitable.com/retirement/products/variable-annuities/performance-cap-rates#StructuredCapitalStrategiesPLUS21,div,h6[text()="Series B Effective Cap Rates"],./EQUITABLE_Series_B_Rate.pdf
+https://www.jackson.com/app/#/ratescenter/current,button,@data-testid="generate-pdf-button",./Jackson_Rate_1031.pdf

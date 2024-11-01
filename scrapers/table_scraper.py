@@ -1,4 +1,4 @@
-import pdfplumber
+import pdfkit
 from utils.selenium_setup import initialize_driver
 from utils.error_handler import send_alert_to_admin
 import requests
@@ -9,8 +9,10 @@ from datetime import datetime
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import time
+import base64
 
-MAX_WAIT_TIME = 120
+MAX_WAIT_TIME = 90
 
 def get_file_hash(file_path):
     """
@@ -103,6 +105,60 @@ def download_pdf_via_selenium(driver, base_url, link_text, pdf_save_path, link_b
         else:
             pdf_link_element = wait.until(
                 EC.presence_of_element_located((By.XPATH, f'//a[contains(., "{link_text}")]')))
+    elif link_by == "button":
+        # 等待页面完全加载
+        wait.until(lambda d: d.execute_script("return document.readyState") == "complete")
+        print("Page fully loaded.")
+
+        # 使用CSV中的link_text直接作为XPath
+        button_element = wait.until(
+            EC.element_to_be_clickable((By.XPATH, f'//button[{link_text}]'))
+        )
+        driver.execute_script("arguments[0].click();", button_element)
+        print("Button clicked successfully.")
+
+        # 等待页面跳转到blob格式的URL
+        time.sleep(5)  # 根据需要调整等待时间
+        original_window = driver.current_window_handle
+        all_windows = driver.window_handles
+        for window in all_windows:
+            if window != original_window:
+                driver.switch_to.window(window)
+                break
+
+        # 获取新窗口的URL
+        blob_url = driver.current_url
+        print(f"New URL detected: {blob_url}")
+
+        if "blob:" in blob_url:
+            print("Detected blob URL. Starting PDF download...")
+
+            # 执行 JavaScript 脚本获取 Blob 数据并保存
+            pdf_content = driver.execute_script("""
+                    return fetch(arguments[0]).then(response => response.blob()).then(blob => {
+                        return new Promise((resolve, reject) => {
+                            const reader = new FileReader();
+                            reader.onload = () => resolve(reader.result.split(',')[1]);  // 读取Base64数据
+                            reader.onerror = reject;
+                            reader.readAsDataURL(blob);  // 将Blob转换为DataURL
+                        });
+                    });
+                """, blob_url)
+
+            # 将Base64解码并写入PDF文件
+            with open(pdf_save_path, "wb") as file:
+                file.write(base64.b64decode(pdf_content))
+            print(f"PDF downloaded and saved to {pdf_save_path}")
+        else:
+            raise Exception("Expected blob URL, but did not find one.")
+        return
+    elif link_by == "div":
+        # Locate the <a> tag within a <div> containing specific text
+        get_element = wait.until(EC.presence_of_element_located(
+            (By.XPATH, f'//{link_text}')))
+        div_element = get_element.find_element(By.XPATH, './ancestor::div[contains(@class, "pcr-rates-title-row")]')
+        pdf_link_element = div_element.find_element(By.XPATH, './/a[contains(@href, "http")]')
+        pdf_link = pdf_link_element.get_attribute('href')
     else:
         raise ValueError("Invalid link_by value. Use 'title', 'text', or 'pdf'.")
 
@@ -141,7 +197,8 @@ def fetch_pdf_from_page(base_url, link_text, pdf_save_path, link_by="title"):
             driver = initialize_driver(headless=False)
             download_pdf_via_selenium(driver, base_url, link_text, pdf_save_path, link_by)
     except Exception as e:
-        send_alert_to_admin(f"Error in fetch_pdf_from_page: {str(e)}")
+            send_alert_to_admin(f"Error in fetch_pdf_from_page: {str(e)}"
+                                f"Fullstacktrace: {e.__traceback__}")
     finally:
         if driver:
             driver.quit()
@@ -172,70 +229,3 @@ def scrape_annuity():
     Uses the fetch_pdf_from_page function to download a PDF from the Transamerica page and extract its contents into a CSV file.
     """
     fetch_all_pdfs_from_csv('table/sites_config.csv')
-    # # Step 2: Extract data from the PDF and save it to CSV
-    # csv_path = './annuity_data_transamerica.csv'
-    # header_path = './table/header.txt'
-    # target_index = "S&P 500®"
-    # extract_table_and_convert_to_csv(pdf_path, csv_path, header_path, target_index)
-
-
-
-def extract_table_and_convert_to_csv(pdf_path, csv_path, header_path, target_index):
-    """
-    Extract tables from the PDF, map the headers and data into CSV format for saving.
-    """
-    # Load custom header from the file
-    with open(header_path, 'r', encoding='utf-8') as file:
-        custom_header = file.readline().strip().split('|')
-
-    company_name = "Transamerica"
-    annuity_type = "RILA"
-    product_name = "Transamerica Structured Index Advantage Annuity"
-    term = "6 Years"
-
-    # Open CSV file to write with the new header
-    with open(csv_path, mode='w', newline='', encoding='utf-8') as file:
-        writer = csv.writer(file)
-        writer.writerow(custom_header)
-
-        # Process the PDF to extract relevant data
-        with pdfplumber.open(pdf_path) as pdf:
-            for page in pdf.pages:
-                tables = page.extract_tables()
-
-                if tables:
-                    for table in tables:
-                        # Locate the index of columns we need
-                        header_row = table[1]  # Assuming the second row is the header
-
-                        # Only process data related to the specified target index and 6-year term
-                        if target_index not in header_row:
-                            continue
-
-                        buffer_idx = header_row.index('Buffer') if 'Buffer' in header_row else None
-                        index_idx = header_row.index(target_index) if target_index in header_row else None
-
-                        if buffer_idx is None or index_idx is None:
-                            print(f"{target_index} or Buffer not found in the header.")
-                            continue
-
-                        # Iterate over the rows starting from the third row to capture relevant data
-                        for row in table[3:]:
-                            if '6-year' in row:
-                                buffer_value = row[buffer_idx]
-                                index_value = row[index_idx]
-
-                                # Write the extracted row into the CSV file
-                                writer.writerow([
-                                    company_name,
-                                    annuity_type,
-                                    product_name,
-                                    term,
-                                    target_index.replace('®', '').strip(),
-                                    "0",  # Assuming fee is 0
-                                    buffer_value,
-                                    "N/A",  # Assuming Cap Rate is N/A for participation rate records
-                                    index_value.replace('Participation Rate', '').strip()
-                                ])
-
-        print(f"Table extracted and saved to {csv_path}")

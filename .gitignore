@@ -36,7 +36,6 @@ config.yaml
 *.log
 
 # Scraped data files
-*.csv
 *.json
 *.xlsx
 *.xml

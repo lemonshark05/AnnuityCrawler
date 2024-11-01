@@ -1,0 +1,2 @@
+base_url,link_by,link_text,pdf_path
+https://www.jackson.com/app/#/ratescenter/current,button,@data-testid="generate-pdf-button",./Jackson_Rate_1031.pdf
